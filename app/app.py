@@ -7,50 +7,24 @@ import time
 
 
 graph_url = "https://graph.facebook.com/"
-# pdb.set_trace()
-# post_req = requests.get(graph_url + f"{page_id}" + "/posts" + f"?access_token={access_token}")
-# comment_req = requests.get(graph_url + f"v16.0" + f"/{post_id}" + "/comments" + f"?access_token={access_token}")
-
-# comment_res = post_req.json()
 
 async def get_post_ids() -> list:
     post_req = requests.get(graph_url + f"{page_id}" + "/posts" + f"?access_token={access_token}")
     comment_res = post_req.json()
     post_datas = []
     for data in comment_res['data']:
-        # post_id = data['id']
         post_datas.append(data)
-        # info.append(data['message'])
-        # info.append(data['created_time'])
-        # if data['id'] in post_dict:
-        #     post_dict[post_id].append(data["message"])
-        #     # post_dict["date"].append(data['created_time'])
-        # else:
-        # post_dict[post_id] = data
-            # post_dict["date"] = data['created_time']
 
     return post_datas
-
-# async def process_request(url : str) -> list:
-#     req = requests.get(url)
-#     comment_res = req.json()
-#     results = []
-#     pdb.set_trace()
-#     # for data in comment_res['data']:
 
 async def get_comment_ids() -> list:
     post_dict : Dict[Any, Any] = {}
     post_info = []
 
     post_datas = await get_post_ids()
-    # comment_post_datas = []
     for post_data in post_datas:
         post_id = post_data['id']
         comment_info = []
-
-        # pdb.set_trace()
-        # reaction_req = await process_request(str(graph_url + f"v16.0" + f"/{post_id}" + "/reactions" + f"?access_token={access_token}"))
-        # shares_req = requests.get(graph_url + f"v16.0" + f"/{post_id}" + "/sharedposts" + f"?access_token={access_token}")
         comment_req = requests.get(graph_url + f"v16.0" + f"/{post_id}" + "/comments" + f"?access_token={access_token}")
         comment_res = comment_req.json()
         
@@ -67,8 +41,6 @@ async def get_comment_ids() -> list:
                 # "user_hyperlink":f"www.facebook.com/{data['from']['name']}",
                 "likes": len(likes_res['data'])
             }
-            # comment_id = data['id']
-            # author_name = data['from']['name']
             comment_info.append(comment_dict)
             
         import time
@@ -94,28 +66,6 @@ async def get_comment_ids() -> list:
 
     return (post_info,comment_info)
 
-# async def get_post_info():
-#     post_info = []
-#     post_datas = await get_post_ids()
-#     comment_info = await get_comment_ids()
-#     sort_by_reaction = sorted(
-#                 comment_info,
-#                 key=lambda e: (e["likes"]),
-#                 reverse=True,
-#             )
-#     for post_data in post_datas:
-#         # post_dict = {
-#                 #         "id": post_id,
-#                 #         "official_post_hyperlink": f"www.facebook.com/{post_id}",
-#                 #         "date": f"{post_data['created_time']}",
-#                 #         "post_content": f"{post_data['message']}",
-#                 #         "hot_reply_comment": sort_by_reaction[0]['content'],
-#                 #         "hot_reply_hyperlink": sort_by_reaction[0]['comment_hyperlink']
-#                 #     }
-#     # post_info.append(post_dict)
-
-# # out = await get_info()
-# print(out)
 while (True):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
